@@ -1,0 +1,108 @@
+---
+title: "Final"
+author: "Rod Rahimi"
+date: "12/9/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+##1a)
+```{r}
+library(MASS)
+
+data("Boston")
+
+plot(Boston$rm,Boston$medv)
+
+```
+
+##b)
+
+```{r}
+b1<- lm(Boston$medv~Boston$rm)
+
+summary(b1)
+```
+##c)
+
+```{r}
+plot(Boston$rm,Boston$medv)
+abline(b1)
+```
+
+##d)
+```{r}
+#there are soem outliers in the resiudlas vs fitted but there doesnt seem to be anyfunneling or anything. (maybe a little funneling)
+#however in the normal qq plot, there seesm to be some deviations in the ends, but for the most part is doing well. So if we remove the outliers, I say no violation, but with outliers there are violations in the assumptions.
+plot(b1)
+```
+##2)
+##a)
+```{r}
+data_url <- "https://github.com/ericwfox/stat630data/raw/master/sfcrimes.csv"
+sfcrimes <- read.csv(data_url, stringsAsFactors = FALSE)
+
+library(tidyverse)
+
+a2<- filter(sfcrimes, type=="Larceny Theft")
+
+```
+
+
+##b)
+```{r}
+library(lubridate)
+t <- strptime(a2$date_time, "%Y/%m/%d %I:%M:%S %p")
+t2 <- ymd_hms(a2$date_time, tz = "America/Los_Angeles")
+
+sfcrimes3 <- data.frame(
+date = date(t2),
+month = month(t2, label=T),
+wday = wday(t2, label=T),
+hour = hour(t2)
+)
+
+library(ggplot2)
+ggplot(sfcrimes3, aes(hour)) + geom_bar()
+
+
+```
+##c)
+```{r}
+ggplot(sfcrimes3, aes(wday)) + geom_bar()
+
+```
+##d)
+```{r}
+daily_crime <- sfcrimes3 %>%
+group_by(date) %>%
+summarize(count = n())
+ ggplot(daily_crime, aes(x=date, y=count)) +
+geom_line(size=0.3) +
+geom_smooth(method="loess", se=FALSE, span=0.2)
+
+```
+##e)
+##honestly, i see that there is a high trend of crimes between july and august.. i wonder why? Crimes seem to happen in the night and mostly on saturday sunday. Theres interesting. 
+
+##bonus)
+```{r}
+bonus <- filter(sfcrimes3,month=="Dec")
+
+daily_crime <- bonus %>%
+group_by(date) %>%
+summarize(count = n())
+ ggplot(daily_crime, aes(x=date, y=count)) +
+geom_line(size=0.3) +
+geom_smooth(method="loess", se=FALSE, span=0.2)
+```
+
