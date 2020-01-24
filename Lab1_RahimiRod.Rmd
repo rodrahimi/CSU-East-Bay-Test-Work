@@ -1,0 +1,86 @@
+---
+title: "Lab 1"
+author: "Rod"
+date: "8/22/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+## 1
+
+```{r }
+sum(c(1:1000))
+```
+
+## 2
+
+```{r }
+
+seq(2,200, by=2)
+
+```
+
+
+## 3
+
+```{r }
+
+c(rep("a",10),rep("b",20))
+```
+
+
+## 4
+
+```{r}
+
+summary(mtcars$wt)
+
+#or
+min(mtcars$wt)
+mean(mtcars$wt)
+max(mtcars$wt)
+median(mtcars$wt)
+
+#or
+min_mean_max <- function(y){
+  x <- c(min= min(y),max= max(y),mean= mean(y),median= median(y))
+  x
+}
+
+
+min_mean_max(mtcars$wt)
+
+```
+
+
+## 5
+
+``` {r}
+
+library(ggplot2)
+
+ggplot(mtcars,aes(x=mpg,y=cyl))+geom_point()+labs(x="Number of cylinders", y="Miles Per gallon")
+
+#negative stepwise association
+
+```
+
+
+## 6
+
+```{r}
+
+rownames(mtcars[which.max(mtcars$wt),])
+
+#the lincon contintental is the max
+
+rownames(mtcars[which.min(mtcars$wt),])
+
+#lotus europa is the min
+```
+

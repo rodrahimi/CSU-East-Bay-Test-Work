@@ -1,0 +1,112 @@
+---
+title: "Lab 9"
+author: "Rod Rahimi"
+date: "10/31/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+
+##1)
+```{r}
+
+#install.packages("openintro")
+library(openintro)
+help(ncbirths)
+data("ncbirths")
+
+youngermothers<-subset(ncbirths, mature=='younger mom')
+maturemothers<-subset(ncbirths,mature=='mature mom')
+table(ncbirths$mature)
+summary(youngermothers$gained)
+summary(maturemothers$gained)
+t.test(youngermothers$gained, maturemothers$gained)
+
+#independence is fine because of the data, and normality is met because of clt
+
+#based on a pvalue of .174 we fail to reject the null hypothesis and do not have evidence to indicate that youngmothers gain weight differently on avergage than mature mothers at the .05 level of significance. 
+
+```
+##2)
+
+```{r}
+max(youngermothers$mage)
+min(maturemothers$mage)
+
+#35 and 34
+```
+##3)
+```{r}
+age_diff<- ncbirths$fage - ncbirths$mage
+age_diff <- age_diff[!is.na(age_diff)]
+t.test(age_diff, conf.level = 0.9)
+
+#we are 90 percent confident that the mean difference between fathers age and motehrs age is between 2.4 to 2.9 years
+```
+
+##4)
+```{r}
+
+library(resampledata)
+
+data("Groceries")
+price_diff<- Groceries$Target - Groceries$Walmart 
+hist(price_diff, main= "Price Difference between Target and Walmart" , xlab = "dollars")
+abline(v=mean(price_diff), col="red", lwd=1.5)
+
+#the original Quaker Oats Life cereal has a ~3 dollar price difference if you look at the data set. one store has it around 6 dollars while the other store has it around 3 dollars.
+
+```
+##b)
+```{r}
+
+
+t.test(price_diff)
+
+```
+#Since the p-value, 0.6415> 0.05, we fail to reject the null hypothesis. The data indicates that the of groceries purchased at Target is not significantly different than Walmart.
+##c)
+```{r}
+price_diff<- price_diff[-2]
+t.test(price_diff)
+#we reject the null hypotehsis at the .05 level of confidence because of a pvalue of .0359. So it is very differently and the outlier plays a huge role. (signifcant vs insignficant.)
+```
+## Exercise 5. Conduct a permutation test to determine whether the median weight of babies with smoking mothers is significantly less than the median weight of babies with nonsmoking mothers. Make sure to include a histogram of the permutation distribution, and to report the p-value and your conclusion for the test. 
+
+```{r}
+ncbirths2 <- na.omit(ncbirths[, c("weight", "habit")])
+weight <- ncbirths2$weight
+habit <- ncbirths2$habit
+nc_smoke <- subset (ncbirths, habit=="smoker")
+nc_nosmoke <- subset (ncbirths, habit=="nonsmoker")
+set.seed(999)
+results <- c()
+for(i in 1:10000) {
+trmt0 <- sample(habit)
+xbar_esc0 <- median(weight[trmt0 == "smoker"])
+xbar_ctrl0 <- median(weight[trmt0 == "nonsmoker"])
+results[i] = xbar_esc0 - xbar_ctrl0
+}
+
+obs_result <- median(nc_smoke$weight)-median(nc_nosmoke$weight)
+
+hist(results)
+abline(v=obs_result,col="blue",lwd=2)
+
+pval <- sum(results < obs_result) / 10000; pval
+
+#we reject the null bc of a p-value of <.001 and have evidence to indicate that the median weight for smokers and non smokers are essentially statistically differen
+
+t.test(nc_smoke$weight,nc_nosmoke$weight)
+```
+
+

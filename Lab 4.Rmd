@@ -1,0 +1,80 @@
+---
+title: "Lab 4"
+author: "Rod Rahimi"
+output:
+  html_document:
+    df_print: paged
+--- 
+
+##1)
+
+```{r}
+#a)
+pnorm(-.1)
+
+#b)
+1-pnorm(5)
+
+#c)
+pnorm(1.47)-pnorm(-.15)
+
+```
+
+## 2)
+```{r}
+abs(qnorm((1-.95)/2))
+```
+
+## 3)
+```{r}
+x<- rnorm(1000,100,20)
+hist(x,freq = F)
+
+qqnorm(x)
+qqline(x)
+```
+
+
+## 4)
+```{r}
+grd <- seq(-11, 50, by=0.01)
+y1 <-dnorm(grd,30,2.5)
+y2 <- dnorm(grd, 20, 4)
+
+plot(c(0, 50), c(0, 0.20), type="n", xlab="x", ylab="f(x)", main='')
+lines(grd,y1,lty=1)
+lines(grd,y2,lty=2)
+```
+
+
+## 5)
+
+```{r}
+data_url <- "https://github.com/ericwfox/stat630data/raw/master/cdc.csv"
+cdc <- read.csv(data_url)
+library(dplyr)
+f_cdc <-filter(cdc,gender=="f")
+
+hist(f_cdc$height,freq=F)
+grd <- seq(50, 75, 0.01)
+y <- dnorm(grd, mean=mean(f_cdc$height), sd=sd(f_cdc$height))
+
+lines(grd, y, col="red")
+
+qqnorm(f_cdc$height)
+qqline(f_cdc$height)
+
+#there are some deviations and points that fall outside the lines.But since most of the lines are within the line, we don't have evidence of non normality and can assume the distribution is normal
+
+hist(f_cdc$weight,freq=F)
+grd <- seq(50, 500, .1)
+y <- dnorm(grd, mean=mean(f_cdc$weight), sd=sd(f_cdc$weight))
+lines(grd, y, col="red")
+
+qqnorm(f_cdc$weight)
+qqline(f_cdc$weight)
+
+#I would say there are some major deviations across the normal qq-line indicating evidence of non normality. Under further examination of the histogram, we can see that this distribution is right skewed. To confirm this suspicion we would have to do some sort of formal statistical hypothesis test.. but we haven't learned that yet :)
+
+```
+

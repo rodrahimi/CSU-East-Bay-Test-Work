@@ -1,0 +1,66 @@
+---
+title: "HW2"
+author: "Rod Rahimi"
+date: "8/29/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## 1 
+```{r}
+data_url <- "https://github.com/ericwfox/stat630data/raw/master/cdc.csv"
+cdc <- read.csv(data_url)
+
+plot(cdc$weight,cdc$wtdesire)
+abline(0,1)
+
+```
+
+## 2
+```{r}
+subset(cdc,wtdesire >500)
+#290 and 180
+cdc2 <- subset(cdc,wtdesire <500)
+plot(cdc2$weight,cdc2$wtdesire)
+abline(0,1)
+
+```
+
+## 3 
+```{r}
+
+cdc3 <- subset(cdc, gender=="m" & exerany==1)
+summary(cdc3$weight)
+summary(cdc3$wtdesire)
+
+list(summary(cdc3$weight),
+summary(cdc3$wtdesire))
+
+```
+## 4 
+```{r}
+
+q4 <-addmargins(table(cdc$genhlth,cdc$exerany))
+
+q4
+df_q4 <- data.frame(q4)
+#excellent (total)
+df_q4[7,3]/df_q4[18,3]
+#excellent (within excellent group)
+df_q4[7,3]/df_q4[13,3]
+#poor(total)
+df_q4[10,3]/df_q4[18,3]
+#poor (within poor group)
+df_q4[10,3]/df_q4[16,3]
+
+#final answer for ya
+
+data.frame(Healthy=df_q4[7,3]/df_q4[13,3]
+,Poor=df_q4[10,3]/df_q4[16,3]
+)
+
+```
+

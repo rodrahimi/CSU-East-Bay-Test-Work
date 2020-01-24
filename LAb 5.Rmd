@@ -1,0 +1,78 @@
+---
+title: "Lab 5"
+author: "Rod Rahimi"
+date: "9/19/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+
+## 1)
+
+```{r}
+data_url <- "https://github.com/ericwfox/stat630data/raw/master/Employee_Compensation2017.csv"
+employee2017 <- read.csv(data_url)
+
+hist(employee2017$Salaries)
+
+#the same is right skewed with a mean of about 6700 and sd of 47586
+qqnorm(employee2017$Salaries)
+qqline(employee2017$Salaries)
+
+mean(employee2017$Salaries)
+sd(employee2017$Salaries)
+```
+#2)
+
+```{r}
+set.seed(10)
+
+q_2 <- sample(employee2017$Salaries,30)
+
+mean(q_2)
+
+mean(employee2017$Salaries)
+#in this case it seems way off, and in general, this should not be a representative estimate of the distribution. We would have to to take many samples of this or a large sample from the original sample.
+
+```
+
+##3)
+
+```{r}
+set.seed(10)
+q3 <-c()
+for(i in 1:10000){
+  q2<-sample(employee2017$Salaries,30)
+  q3 <-c(q3,mean(q2))
+}
+
+
+mean(q3)
+hist(q3)
+qqnorm(q3)
+qqline(q3)
+
+#its normal, with no deviations and the mean is extremely close to the true sample mean from the original data set. Thus we have what CLT represents... WOW
+```
+## 4)
+
+```{r}
+
+mean(q3)
+mean(employee2017$Salaries)
+
+#SOoooo similiar and as they should be from the CLT. Once your adjust ur actual poplation sd sigma divivided by sqrt n and sigma from your sample, they are essentially the same
+sd(q3)
+sd(employee2017$Salaries)/sqrt(30)
+
+```
+
+
+##5)
+
+#The distribution should be normal as n gets larger (bigger than 30 is good). FOr the most part this seems to be true,(as referenced from hist and qq plot) as there are minor, if any deviations from #4. (n=30 so clt is good)

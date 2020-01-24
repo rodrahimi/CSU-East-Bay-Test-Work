@@ -1,0 +1,84 @@
+---
+title: "Lab 7"
+author: "Rod Rahimi"
+date: "10/16/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+##1
+```{r}
+library(resampledata)
+Chlorine <- Bangladesh$Chlorine 
+Chlorine <- Chlorine[!is.na(Chlorine)]
+summary(Chlorine)
+sd(Chlorine)
+var(Chlorine)
+hist(Chlorine)
+qqnorm(Chlorine)
+qqline(Chlorine)
+```
+##1b)
+```{r}
+set.seed(100)
+n <- length(Chlorine); n
+replicates <- rep(0, 5000)
+for(i in 1:5000) {
+boot_samp <- sample(Chlorine, size = n, replace = TRUE)
+replicates[i] <- mean(boot_samp)
+}
+
+hist(replicates)
+abline(v=mean(Chlorine), col="red")
+qqnorm(replicates)
+qqline(replicates)
+```
+##1c)
+```{r}
+quantile(replicates, c(0.025, 0.975))
+#We are 95 percent confident that the true mean of the chlorine population is between 54.55 and 104.11 units.
+```
+
+```{r}
+ci_lower <- mean(Chlorine) - 1.96 * sd(Chlorine) / sqrt(n)
+ci_upper <- mean(Chlorine) + 1.96 * sd(Chlorine) / sqrt(n)
+round(c(ci_lower, ci_upper), 2)
+
+# They are extrememly close together only differing by a few points, which makes sense because of the whole being right skewed. It mekes sense that the confidence interval islarger for bootstrap slilghtly. 
+```
+
+##2a)
+```{r}
+set.seed(100)
+n <- length(Chlorine); n
+replicates2a<- rep(0, 5000)
+for(i in 1:5000){
+  boot_samp <- sample(Chlorine, size = n, replace = TRUE)
+  replicates2a[i] <- median(boot_samp)
+}
+hist(replicates2a)
+abline(v=median(Chlorine), col="red", lwd=1.5)
+qqnorm(replicates2a)
+qqline(replicates2a)
+
+
+```
+
+##2b)
+
+```{r}
+sd(replicates2a)
+
+```
+
+##2c)
+```{r}
+quantile(replicates2a, c(0.025, 0.975))
+#we are 95 percent confident that the true population mean of the chlorine is between 11.5 and 16.5 units. 
+```
+
